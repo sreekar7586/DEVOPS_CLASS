@@ -1,36 +1,102 @@
-\# Day 13 - Dockerfile Basics
+\# Day 13 - Environment Variables and Port Mapping
 
 
 
-Dockerfile is a text file used to create Docker images automatically.
+\## Passing Environment Variables from Host System
 
 
 
-\## What is Dockerfile?
-
-It contains instructions to build a custom image.
+Environment variables can be passed from host to container dynamically.
 
 
 
-\## Basic Syntax
+\## Example 1
 
 
 
-\# comment
-
-COMMAND argument
+Step 1: Set variable on host
 
 
 
-\## Important Commands
+export APP\_PORT=8080
 
 
 
-FROM ubuntu
+Step 2: Run container
 
-RUN apt update
 
-CMD \["echo", "Hello"]
+
+docker run -e APP\_PORT nginx env
+
+
+
+This passes APP\_PORT value into container.
+
+
+
+\## Using .env File (Professional Method)
+
+
+
+Create a file named .env
+
+
+
+DB\_HOST=localhost
+
+DB\_USER=root
+
+DB\_PASS=secret
+
+
+
+Run container:
+
+
+
+docker run --env-file .env myapp
+
+
+
+This method is clean and widely used in real projects.
+
+
+
+\## Example 2 (Interactive + Detached Mode)
+
+
+
+docker run -it -d httpd
+
+
+
+Explanation:
+
+\-it → interactive mode  
+
+\-d → background execution  
+
+httpd → image name  
+
+
+
+This command pulls image (if not present) and starts container.
+
+
+
+\## Port Mapping (-p option)
+
+
+
+Port mapping allows external access to container applications.
+
+
+
+\## Syntax
+
+
+
+docker run -p <HOST\_PORT>:<CONTAINER\_PORT> IMAGE
 
 
 
@@ -38,67 +104,67 @@ CMD \["echo", "Hello"]
 
 
 
-FROM → Base image  
+HOST\_PORT → port on your system  
 
-RUN → Executes commands during build  
-
-CMD → Default command when container starts  
+CONTAINER\_PORT → port inside container  
 
 
 
-\## Example Dockerfile
+\## Example 1 (Without Port Mapping)
 
 
 
-FROM ubuntu
-
-RUN apt update
-
-RUN apt install -y apache2
-
-CMD \["echo", "Dockerfile example"]
+docker run nginx
 
 
 
-\## Build Image
+Result:
+
+Application runs but NOT accessible in browser.
 
 
 
-docker build -t myimage .
+\## Example 2 (With Port Mapping)
 
 
 
-\## Run Image
+docker run -p 8080:80 nginx
 
 
 
-docker run myimage
+Now open browser:
+
+http://localhost:8080
 
 
 
-\## Additional Commands
+\## Internal Flow
 
 
 
-WORKDIR /app
-
-COPY . /app
-
-ADD file /app
-
-ENV NAME=Sreekar
+Browser → Host → Container → Application
 
 
 
-\## Notes
+\## Important Notes
 
-\- Each instruction creates a layer
 
-\- Dockerfile automates image creation
+
+\- Containers run in isolated network
+
+\- Without -p, services are not accessible
+
+\- -p is required for web applications
 
 
 
 \## Summary
 
-Dockerfile is used to create custom images efficiently.
+
+
+\- Environment variables help configure containers
+
+\- .env file is best practice
+
+\- Port mapping allows external access
 
