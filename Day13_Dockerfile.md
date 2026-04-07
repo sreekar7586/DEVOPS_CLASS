@@ -1,170 +1,92 @@
-\# Day 13 - Environment Variables and Port Mapping
+\#include <iostream>
 
+\#include <iomanip>
 
+using namespace std;
 
-\## Passing Environment Variables from Host System
 
 
+// Class1
 
-Environment variables can be passed from host to container dynamically.
+class Class1 {
 
+&#x20;   double radius;
 
+public:
 
-\## Example 1
+&#x20;   void setRadius(double r) {
 
+&#x20;       this->radius = r;
 
+&#x20;   }
 
-Step 1: Set variable on host
+&#x20;   double circumference() {
 
+&#x20;       return 2 \* 3.14 \* radius;
 
+&#x20;   }
 
-export APP\_PORT=8080
+};
 
 
 
-Step 2: Run container
+// Class2
 
+class Class2 {
 
+&#x20;   double radius;
 
-docker run -e APP\_PORT nginx env
+public:
 
+&#x20;   void setRadius(double r) {
 
+&#x20;       this->radius = r;
 
-This passes APP\_PORT value into container.
+&#x20;   }
 
+&#x20;   double circumference() {
 
+&#x20;       return 23.14 \* radius;
 
-\## Using .env File (Professional Method)
+&#x20;   }
 
+};
 
 
-Create a file named .env
 
+int main() {
 
+&#x20;   double radius;
 
-DB\_HOST=localhost
+&#x20;   cin >> radius;
 
-DB\_USER=root
 
-DB\_PASS=secret
 
+&#x20;   Class1 obj1;
 
+&#x20;   obj1.setRadius(radius);
 
-Run container:
+&#x20;   double c1 = obj1.circumference();
 
 
 
-docker run --env-file .env myapp
+&#x20;   Class2 obj2;
 
+&#x20;   obj2.setRadius(radius);
 
+&#x20;   double c2 = obj2.circumference();
 
-This method is clean and widely used in real projects.
 
 
+&#x20;   cout << fixed << setprecision(2);
 
-\## Example 2 (Interactive + Detached Mode)
+&#x20;   cout << "Class1 Output: " << c1 << endl;
 
+&#x20;   cout << "Class2 Output: " << c2 << endl;
 
 
-docker run -it -d httpd
 
+&#x20;   return 0;
 
-
-Explanation:
-
-\-it → interactive mode  
-
-\-d → background execution  
-
-httpd → image name  
-
-
-
-This command pulls image (if not present) and starts container.
-
-
-
-\## Port Mapping (-p option)
-
-
-
-Port mapping allows external access to container applications.
-
-
-
-\## Syntax
-
-
-
-docker run -p <HOST\_PORT>:<CONTAINER\_PORT> IMAGE
-
-
-
-\## Explanation
-
-
-
-HOST\_PORT → port on your system  
-
-CONTAINER\_PORT → port inside container  
-
-
-
-\## Example 1 (Without Port Mapping)
-
-
-
-docker run nginx
-
-
-
-Result:
-
-Application runs but NOT accessible in browser.
-
-
-
-\## Example 2 (With Port Mapping)
-
-
-
-docker run -p 8080:80 nginx
-
-
-
-Now open browser:
-
-http://localhost:8080
-
-
-
-\## Internal Flow
-
-
-
-Browser → Host → Container → Application
-
-
-
-\## Important Notes
-
-
-
-\- Containers run in isolated network
-
-\- Without -p, services are not accessible
-
-\- -p is required for web applications
-
-
-
-\## Summary
-
-
-
-\- Environment variables help configure containers
-
-\- .env file is best practice
-
-\- Port mapping allows external access
+}
 
